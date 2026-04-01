@@ -17,9 +17,9 @@ Ans: I included
 **b. Design changes**
 
 - Did your design change during implementation?
-No 
+yes 
 - If yes, describe at least one change and why you made it.
-
+ I originally had `Scheduler.generate_plan()` use the owner's `available_hours_per_day` and schedule everything starting at 08:00 by default, which was too rigid. I updated the design and implementation to accept a configurable `start_time` and optional `available_hours` parameter, so the schedule can begin at any user-preference time and handle variable slots, while keeping backward compatibility with the default behavior.
 ---
 
 ## 2. Scheduling Logic and Tradeoffs

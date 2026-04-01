@@ -5,16 +5,21 @@ class Pet {
   +species: str
   +age: int
   +special_needs: list[str]
+  +tasks: list[Task]
+  +add_task(task: Task)
+  +remove_task(index: int)
+  +get_pending_tasks() -> list[Task]
 }
 
 class Owner {
   +name: str
   +available_hours_per_day: int
   +preferences: dict
-  +pet: Pet
-  +tasks: list[Task]
-  +add_task(task: Task)
-  +edit_task(task: Task)
+  +pets: list[Pet]
+  +add_pet(pet: Pet)
+  +remove_pet(index: int)
+  +get_all_tasks() -> list[Task]
+  +get_pending_tasks() -> list[Task]
 }
 
 class Task {
@@ -23,6 +28,9 @@ class Task {
   +priority: str  // high, medium, low
   +category: str  // feeding, walking, grooming, etc.
   +frequency: str  // daily, weekly, etc.
+  +completed: bool
+  +mark_complete()
+  +is_due() -> bool
 }
 
 class ScheduledTask {
@@ -38,9 +46,11 @@ class Plan {
 }
 
 class Scheduler {
-  +generate_plan(owner: Owner) -> Plan
+  +generate_plan(owner: Owner, start_time: str = "08:00", available_hours: int = None) -> Plan
   -prioritize_tasks(tasks: list[Task]) -> list[Task]
-  -schedule_tasks(tasks: list[Task], available_time: int) -> list[ScheduledTask]
+  -schedule_tasks(tasks: list[Task], available_time: int, start_time: str) -> list[ScheduledTask]
+  -_parse_time(ts: str) -> int
+  -_format_time(minutes: int) -> str
 }
 
 ' Relationships
