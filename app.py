@@ -121,15 +121,84 @@ st.subheader("Build Schedule")
 st.caption("This button should call your scheduling logic once you implement it.")
 
 if st.button("Generate schedule"):
-    st.warning(
-        "Not implemented yet. Next step: create your scheduling logic (classes/functions) and call it here."
-    )
-    st.markdown(
-        """
-Suggested approach:
-1. Design your UML (draft).
-2. Create class stubs (no logic).
-3. Implement scheduling behavior.
-4. Connect your scheduler here and display results.
-"""
-    )
+    scheduler = Scheduler()
+
+    # Show pending tasks (sorted by time) across all pets
+    pending = owner.get_pending_tasks()
+    if pending:
+        sorted_tasks = scheduler.sort_by_time(pending)
+        st.subheader("Pending Tasks (sorted by time)")
+        table_rows = []
+        for t in sorted_tasks:
+            pet_name_for_t = next((p.name for p in owner.pets if t in p.tasks), "")
+            table_rows.append(
+                {
+                    "Pet": pet_name_for_t,
+                    "Task": t.name,
+                    "Time": t.time,
+                    "Duration": t.duration_minutes,
+                    "Priority": t.priority,
+                    "Due": t.due_date,
+                }
+            )
+        st.table(table_rows)
+    else:
+        st.info("No pending tasks to schedule.")
+
+    # Generate plan using the Scheduler
+    plan = scheduler.generate_plan(owner)
+
+    if plan.scheduled_tasks:
+        st.subheader("Generated Plan")
+        plan_rows = []
+        for s in plan.scheduled_tasks:
+            plan_rows.append(
+                {
+                    "Start": s.start_time,
+                    "End": s.end_time,
+                    "Task": s.task.name,
+                    "Pet": s.pet_name,
+                    "Duration": s.task.duration_minutes,
+                    "Priority": s.task.priority,
+                }
+            )
+        st.table(plan_rows)
+        st.success(f"Total scheduled time: {plan.total_time} minutes")
+    else:
+        st.info("No tasks could be scheduled within available time.")
+
+    # Detect structured conflicts and display helpful warnings
+    conflicts = []
+    def to_minutes(ts: str) -> int:
+        h, m = [int(x) for x in ts.split(":")]
+        return h * 60 + m
+
+    sts = plan.scheduled_tasks
+    for i in range(len(sts)):
+        a = sts[i]
+        a_start = to_minutes(a.start_time)
+        a_end = to_minutes(a.end_time)
+        for j in range(i + 1, len(sts)):
+            b = sts[j]
+            b_start = to_minutes(b.start_time)
+            b_end = to_minutes(b.end_time)
+            if a_start < b_end and b_start < a_end:
+                conflicts.append(
+                    {
+                        "Task A": a.task.name,
+                        "Pet A": a.pet_name,
+                        "A start": a.start_time,
+                        "A end": a.end_time,
+                        "Task B": b.task.name,
+                        "Pet B": b.pet_name,
+                        "B start": b.start_time,
+                        "B end": b.end_time,
+                    }
+                )
+
+    if conflicts:
+        st.warning(f"{len(conflicts)} scheduling conflict(s) detected. Review conflicting entries below and consider rescheduling or adjusting durations.")
+        st.table(conflicts)
+        st.info("Tip: Click a pet's task in the list above to edit its time or duration and regenerate the schedule.")
+    else:
+        st.success("No scheduling conflicts detected.")

@@ -22,6 +22,19 @@ Your final app should:
 - Display the plan clearly (and ideally explain the reasoning)
 - Include tests for the most important scheduling behaviors
 
+## Features
+
+This implementation includes the core scheduling algorithms used by the app:
+
+- **Sorting by time:** `Scheduler.sort_by_time` sorts tasks by their `time` string (HH:MM) using a numeric key (hour, minute), ensuring chronological ordering.
+- **Priority-based selection:** `Scheduler.generate_plan` prioritizes tasks by `priority` (high → medium → low) before scheduling to favor important care items.
+- **Sequential & explicit-time scheduling:** Tasks with an explicit `time` are scheduled at that time; tasks without an explicit time are scheduled sequentially starting from a configurable `start_time` until available minutes run out.
+- **Daily recurrence handling:** `Pet.mark_task_complete` creates a new `Task` for the next occurrence when a task has `frequency='daily'` (similarly for `weekly`), advancing the `due_date` appropriately.
+- **Conflict detection:** `Scheduler.detect_conflicts` examines the generated `Plan` for overlapping scheduled tasks and returns human-readable warnings that the UI displays with `st.warning` and a conflict table.
+- **Filtering utilities:** `Owner.get_pending_tasks`, `Owner.get_pending_tasks_with_pet`, and `Scheduler.filter_tasks` provide convenient views for building the plan and presenting per-pet task lists.
+
+These features are wired into the Streamlit UI in `app.py` so owners can view sorted pending tasks, inspect generated plans, and see actionable conflict warnings.
+
 ## Getting started
 
 ### Setup
@@ -56,4 +69,4 @@ These tests cover:
 - **Recurrence Logic:** confirms marking a `daily` task complete creates the next day's task with the correct `due_date`.
 - **Conflict Detection:** ensures the `Scheduler.detect_conflicts` method flags overlapping scheduled tasks.
 
-Confidence Level: ★★★★☆ (4/5)
+Confidence Level: 4/5

@@ -56,8 +56,11 @@ Ans: because the app is only used for small personal schedulling, not for produc
 
 **a. What you tested**
 
-- What behaviors did you test?
-- Why were these tests important?
+- **Sorting Correctness:** Verified `Scheduler.sort_by_time` returns tasks in chronological order (HH:MM).
+- **Recurrence Logic:** Confirmed that marking a `daily` task complete via `Pet.mark_task_complete` appends a new task with `due_date` advanced by one day and `completed=False`.
+- **Conflict Detection:** Checked `Scheduler.detect_conflicts` flags overlapping scheduled tasks and returns readable warnings.
+
+These tests focus on the core scheduling behaviors that determine whether the app produces a usable, predictable plan for a pet owner. Sorting ensures the UI and plan are chronologically sensible; recurrence keeps daily care continuous; conflict detection surfaces issues owners must resolve.
 
 **b. Confidence**
 
@@ -79,3 +82,11 @@ Ans: because the app is only used for small personal schedulling, not for produc
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+
+## 6. Demo
+
+Click the image to open the full-resolution demo in a new tab.
+
+[![PawPal+ demo](demo.png)](demo.png)
+
+
