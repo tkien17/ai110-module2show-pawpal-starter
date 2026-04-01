@@ -5,11 +5,19 @@
 **a. Initial design**
 
 - Briefly describe your initial UML design.
+Ans: "Owner" has the attributes Pet and list of Task. Scheduler use the information of Owner to create a plan 
 - What classes did you include, and what responsibilities did you assign to each?
-
+Ans: I included
++ Pet: store pet's information 
++ Task: blueprint for care activities
++ Owner: hold user constraints, preferences, pet, and list of tasks need to do
++ ScheduledTask: an extension of Task that has start and end time 
++ Plan: a container of multiples ScheduledTask objects
++ Scheduler: the engine of application, used to generate Plan
 **b. Design changes**
 
 - Did your design change during implementation?
+No 
 - If yes, describe at least one change and why you made it.
 
 ---
