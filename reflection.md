@@ -32,7 +32,9 @@ yes
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
+Ans: the scheduler performs a simple overlap check and returns human-readable warnings rather than automatically rescheduling or blocking tasks. This keeps the implementation small and predictable and avoids making assumptions about which task should be moved or dropped. The tradeoff is that overlapping tasks may still remain in the plan and require manual user action
 - Why is that tradeoff reasonable for this scenario?
+Ans: because the app is only used for small personal schedulling, not for production-grade planning
 
 ---
 
